@@ -1,0 +1,204 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!doctype html>
+<html ng-app="ui.bootstrap.demo">
+<head>
+<title>ScanBook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="angular.min.js"></script>
+<script src="angular-animate.js"></script>
+<script src="ang.js"></script>
+<script src="GoogleSignIn.js"></script>
+<script
+	src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<style>
+div.space {
+	padding-top: 3px;
+}
+
+.img-circle {
+	border-radius: 100%;
+	width: 10%;
+	height: 10%;
+}
+tr {
+width: 100%;
+display: inline-table;
+}
+
+table{
+ height:300px; 
+}
+tbody{
+  overflow-y: scroll;
+  height: 200px;
+  width: 100%;
+  position: absolute;
+}
+</style>
+</head>
+<body>
+
+
+	<div ng-controller="AccordionCtrl">
+		<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target="#myNavbar">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">ScanBook</a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav navbar-right">
+						<li style="text-align: center;"><img align="right"
+							id="imgHolder" class="img-circle"></li>
+						<li><a id="uName"> Guest </a></li>
+						<li><label id='loginId' hidden="true"></label> <a href="#"
+							onclick='login();' id="loginText"><span
+								class="glyphicon glyphicon-log-in"></span> Login</a> <a
+							Style="display: none" ID="logoutText" target='myIFrame'
+							ng-click="logout()"
+							onclick="myIFrame.location='https://www.google.com/accounts/Logout'; startLogoutPolling();return false;">
+								<span class="glyphicon glyphicon-log-out"></span> Logout
+						</a> <iframe name='myIFrame' id="myIFrame" style='display: none'></iframe></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<uib-accordion ng-model="a" close-others="true"> <uib-accordion-group
+			heading="Add Books" panel-class="panel-success">
+		<form name="addForm">
+			<div class="row">
+				<div class="col-sm-3">
+					<input class="form-control" name="ncode" id="code" ng-model="scode"
+						type="number" type="text" placeholder="Book Code"
+						ng-required="true">
+					<div class="space"></div>
+					<input class="form-control" id="title" name="ntitle"
+						ng-model="stitle" type="text" placeholder="Book Title"
+						ng-required="true">
+					<div class="space"></div>
+					<input class="form-control" id="author" name="nauthor"
+						ng-model="sauthor" type="text" placeholder="Book Author"
+						ng-required="true">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-2">
+					<div class="space"></div>
+					<input class="form-control" id="pages" name="npages"
+						ng-model="spages" placeholder="Total Pages" type="number"
+						ng-required="true">
+					<div class="checkbox">
+						<label><input type="checkbox" ng-model="sread">Have
+							Read</label>
+					</div>
+					<uib-rating ng-model="rate" max="max" readonly="isReadonly"
+						on-hover="hoveringOver(value)" on-leave="overStar = null"
+						titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+					<div class="space"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">
+					<div align="center">
+						<button type="button" class="btn btn-sm btn-success"
+							ng-click="addForm.$valid && Save()">Save</button>
+					</div>
+					<div class="space"></div>
+					<div class="alert alert-warning" ng-show="!addForm.$valid">
+						<strong>Warning!</strong> Please enter all the details!!!.
+					</div>
+				</div>
+			</div>
+		</form>
+		</uib-accordion-group> <uib-accordion-group heading="View Books" panel-class="panel-info">
+		<form name="viewForm">
+			<div class="row">
+				<div class="col-sm-3">
+					<input type="number" id="vsearch" name="nsearch" min="0"
+						placeholder="Please enter the barcode" ng-model="dynamicFrom"
+						class="form-control" ng-required="true">
+				</div>
+				<div class="col-sm-2" align="left">
+					<button type="button" class="btn btn-sm btn-info" ng-model="vView"
+						ng-click="viewForm.$valid && viewBook()">View</button>
+				</div>
+			</div>
+		</form>
+		<div id="vdetails" ng-show="myValue" class="ng-hide">
+			<div class="row">
+				<div class="col-sm-8">
+					<label id="vcode" ng-model="vmcode">Book Code : </label>{{vmcode}}
+					<div class="space"></div>
+					<label id="vtitle" ng-model="vmtitle">Book Title : </label>{{vmtitle}}
+					<div class="space"></div>
+					<label id="vauthor" ng-model="vmauthor">Book Author : </label>{{vmauthor}}
+					<div class="space"></div>
+					<label id="vpages" ng-model="vmpages">Total Pages : </label>{{vmpages}}
+					<div class="space"></div>
+					<span><input disabled="disabled" type="checkbox" id="vread"
+						ng-model="vmread" value="">Have Read</span>
+					<div class="space"></div>
+					<uib-rating ng-model="vrate" max="max"
+						titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+					<span class="label"
+						ng-class="{'label-danger': vpercent<30,'label-warning': vpercent>=30 && vpercent<60, 'label-info': vpercent>=60 && vpercent<80, 'label-success': vpercent>=80}">{{vpercent}}%</span>
+					<div class="space"></div>
+					<button type="button" class="btn btn-sm btn-danger"
+						ng-click="Clear()">Clear Search</button>
+				</div>
+			</div>
+		</div>
+		</uib-accordion-group> <uib-accordion-group heading="Delete Books"
+			panel-class="panel-danger">
+		<form name="delForm">
+			<div class="row">
+				<div class="col-sm-3">
+					<input type="number" id="vdel"
+						placeholder="Please enter the barcode" ng-model="dynamicdelete"
+						min="0" name="ndelete" ng-required="true" class="form-control">
+				</div>
+				<div class="col-sm-4" align="left">
+					<button type="button" class="btn btn-sm btn-danger"
+						ng-model="vdelBtn" ng-click="delForm.$valid && deleteBook()">Delete</button>
+				</div>
+			</div>
+		</form>
+		</uib-accordion-group> <uib-accordion-group heading="My Books"
+			panel-class="panel-warning">
+		<div class="row">
+			<div class="col-sm-4" align="left">
+				<button type="button" class="btn btn-sm btn-warning"
+					ng-model="vgetBtn" ng-click="getBook()"> {{getLoad}} </button>
+			</div>
+		</div>
+			<div class="space"></div>
+		<div>
+			<uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+			<uib-slide ng-repeat="slide in slides" active="slide.active">
+			<img ng-src="{{slide.image}}"  style="margin: auto; width: 20%;
+	height: 20%;">
+			<div class="carousel-caption" align="left">
+				<h4 style="color: black;">{{slide.code}}</h4>
+				<p style="color: black;">{{slide.title}}</p>
+			</div>
+			</uib-slide> </uib-carousel>
+		</div>
+
+		</uib-accordion-group> </uib-accordion>
+	</div>
+</body>
+</html>

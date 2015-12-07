@@ -1,0 +1,5 @@
+
+var express = require('express');
+var app = express();
+app.use(function(req, res, next) { res.header('Access-Control-Allow-Ori­gin', "*"); res.header('Access-Control-Allow-Met­hods','GET,PUT,POST,DELETE')­; res.header('Access-Control-Allow-Hea­ders', 'Content-Type'); next();
+})

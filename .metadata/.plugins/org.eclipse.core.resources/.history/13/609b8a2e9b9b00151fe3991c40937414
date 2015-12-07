@@ -1,0 +1,31 @@
+package book;
+
+public class bOOK {
+
+    private final String  Barcode;
+    private final String Title;
+    private final String  Author;
+    private final int No_Of_Page;
+
+    public Book(String  Barcode, String Title,String Author,int No_Of_Page) {
+        this.Barcode = Barcode;
+        this.Title = Title;
+        this.Author = Author;
+        this.No_Of_Page = No_Of_Page;
+    }
+
+    public String getBarcode() {
+        return Barcode;
+    }
+
+    public String getContent() {
+        return Title;
+    }
+
+    public String getAuthor() {
+        return Author;
+    }
+    public int  getNo_Of_Page() {
+        return No_Of_Page;
+    }
+}

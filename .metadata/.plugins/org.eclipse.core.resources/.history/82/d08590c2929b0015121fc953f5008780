@@ -1,0 +1,5 @@
+package mySqlDb;
+
+public class SqlConnection {
+
+}

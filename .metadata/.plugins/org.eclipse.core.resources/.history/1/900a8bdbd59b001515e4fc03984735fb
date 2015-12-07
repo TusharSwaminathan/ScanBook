@@ -1,0 +1,10 @@
+﻿
+    $("[src*=Note1]").live("click", function () {
+        $(this).closest("tr").after("<tr><td></td><td colspan = '999'>" + $(this).next().html() + "</td></tr>")
+        $(this).attr("src", "Images/minus3.png");
+    });
+$("[src*=minus]").live("click", function () {
+    $(this).attr("src", "Images/Note1.png");
+    $(this).closest("tr").next().remove();
+});
+  

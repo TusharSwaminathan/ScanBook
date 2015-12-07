@@ -1,0 +1,42 @@
+package mySqlDb;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ResourceBundle;
+
+import org.apache.log4j.Logger;
+
+public  class SQLConnection {
+
+	private static org.apache.log4j.Logger log = Logger.getLogger(SQLConnection.class);
+	public static void main(String[] args) {
+		System.out.println(new SQLConnection().getConnection());
+	}
+
+	public  Connection getConnection() {
+
+		ResourceBundle rb1=ResourceBundle.getBundle("DB_Config");
+		String url = rb1.getString("URL");
+		String dbName = rb1.getString("dbName");
+		String driver = rb1.getString("driver");
+		String userName = rb1.getString("userName");
+		String password = rb1.getString("password");
+
+        
+		Connection conn=null;
+
+		try {
+			Class.forName(driver).newInstance();
+		
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("DB CONNECTION FAILURE");
+			System.out.println("Connection Failure to the database.");
+		}
+		return conn;
+	}
+}
+

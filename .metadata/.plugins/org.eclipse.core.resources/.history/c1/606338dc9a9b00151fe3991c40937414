@@ -1,0 +1,27 @@
+package book;
+
+public class Greeting {
+
+	
+	
+	
+	
+	
+    private final String  Barcode;
+    private final String Title;
+    private final String  Author;
+    private final int No_Of_Page;
+
+    public Greeting(String  Barcode, String Title,String Author,int No_Of_Page) {
+        this.id = id;
+        this.content = content;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}

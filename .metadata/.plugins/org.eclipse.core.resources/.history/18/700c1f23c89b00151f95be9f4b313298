@@ -1,0 +1,63 @@
+package book;
+
+
+import java.util.concurrent.atomic.AtomicLong;
+
+import mySqlDb.DBActivities;
+import mySqlDb.SQLConnection;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class BookController {
+
+	private static final String template = "Hello, %s!";
+	private final AtomicLong counter = new AtomicLong();
+	
+	@CrossOrigin(origins = "http://localhost:8081")
+	@RequestMapping("/addbook")
+	public Book greeting(@RequestParam(value="code", defaultValue="") String code,
+			@RequestParam(value="title", defaultValue="") String title,
+			@RequestParam(value="author", defaultValue="") String author,
+			@RequestParam(value="page", defaultValue="") String page,
+			@RequestParam(value="read", defaultValue="") String read) {
+
+
+		try{
+			DBActivities dbaInsert = new DBActivities();
+			Book bkEntity = dbaInsert.AddToDB();
+			return bkEntity;
+		}
+		catch(Exception e)
+		{
+			return new Book("","","",3);
+		}
+	}
+	@RequestMapping("/viewbook")
+	public Book viewBook(@RequestParam(value="code", defaultValue="") String code,
+			@RequestParam(value="title", defaultValue="") String title,
+			@RequestParam(value="author", defaultValue="") String author,
+			@RequestParam(value="page", defaultValue="") String page,
+			@RequestParam(value="read", defaultValue="") String read) {
+
+
+		try{
+			DBActivities dbaInsert = new DBActivities();
+			Book bkEntity = dbaInsert.AddToDB();
+			return bkEntity;
+		}
+		catch(Exception e)
+		{
+			return new Book("","","",3);
+		}
+	}
+	/*   @RequestMapping("/greeting")
+    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
+        return new Greeting(counter.incrementAndGet(),
+                            String.format(template, name));
+
+}*/
+}

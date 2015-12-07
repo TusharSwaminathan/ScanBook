@@ -1,0 +1,41 @@
+package mySqlDb;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ResourceBundle;
+
+import org.apache.log4j.Logger;
+
+public  class SQLConnection {
+
+	private static org.apache.log4j.Logger log = Logger.getLogger(SQLConnection.class);
+	public static void main(String[] args) {
+		System.out.println(new SQLConnection().getConnection());
+	}
+
+	public  Connection getConnection() {
+		
+		String url = "jdbc:mysql://scanbuy.cftojta7r0ga.us-west-2.rds.amazonaws.com:3306/";
+		String dbName = "scanbuydb";
+		String driver = "com.mysql.jdbc.Driver";
+		String userName = "tushar";
+		String password = "tushar123";
+ 
+        
+		Connection conn=null;
+
+		try {
+			Class.forName(driver).newInstance();
+		
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("DB CONNECTION FAILURE");
+			System.out.println("Connection Failure to the database.");
+		}
+		return conn;
+	}
+}
+
